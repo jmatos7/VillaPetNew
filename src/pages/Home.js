@@ -8,11 +8,20 @@ export default function Home() {
     <section
       className="hero d-flex align-items-center"
     >
-      <img
-        src="/img/animais/PE-Funpets-00023.jpg"
-        alt="Villa Pet"
-        className="hero-bg-image"
-      />
+     <img
+  src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=90"
+  alt="Test Image"
+  style={{
+    width: '100%',
+    height: '100vh',
+    objectFit: 'cover',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: -1,
+  }}
+/>
+
       <Container>
         <Row>
           <Col md={8} lg={6}>

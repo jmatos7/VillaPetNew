@@ -9,17 +9,18 @@ import Footer from './components/Footer'
 
 function App() {
   return (
+    <>
     <Router>
       <VillaPetNavbar />
-      <main className="container mt-4">
+  
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/marcacoes" element={<Marcacoes />} />
         </Routes>
-      </main>
       <Footer />
     </Router>
+    </>
   );
 }
 

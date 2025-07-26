@@ -4,189 +4,21 @@ $cor-accento: #C5A880;
 $cor-neutro-escuro: #2E2E2E;
 $cor-neutro-claro: #E0E0E0;
 
-.villa-home {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: $cor-neutro-escuro;
-  line-height: 1.6;
-  padding: 0 1rem;
+.hero {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  color: #fff;
 
-  section {
-    max-width: 1200px;
-    margin: 3rem auto;
-    padding: 0 1rem;
+  .hero-bg-image {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
   }
 
-  .hero-section {
-    background: linear-gradient(
-        rgba(112, 28, 28, 0.7), 
-        rgba(112, 28, 28, 0.7)
-      ),
-      url('../assets/crechefelina.jpg') no-repeat center center/cover;
-    color: $cor-secundaria;
-    height: 80vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-radius: 12px;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-
-    .hero-content {
-      max-width: 600px;
-
-      h1 {
-        font-size: 3.5rem;
-        margin-bottom: 1rem;
-        font-weight: 700;
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-      }
-
-      p {
-        font-size: 1.3rem;
-        margin-bottom: 2rem;
-        font-weight: 300;
-      }
-
-      .btn-primary {
-        background-color: $cor-accento;
-        border: none;
-        padding: 0.8rem 2.5rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: $cor-neutro-escuro;
-        border-radius: 40px;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(197,168,128,0.7);
-        transition: background-color 0.3s ease;
-
-        &:hover {
-          background-color: darken($cor-accento, 10%);
-          color: white;
-        }
-      }
-    }
-  }
-
-  .services-section {
-    h2 {
-      font-size: 2.7rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      color: $cor-primaria;
-      font-weight: 700;
-    }
-
-    .cards-container {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-
-      .card {
-        background-color: white;
-        box-shadow: 0 4px 15px rgba(112, 28, 28, 0.1);
-        border-radius: 12px;
-        padding: 2rem 1.5rem;
-        max-width: 300px;
-        flex: 1 1 280px;
-        text-align: center;
-        transition: transform 0.3s ease;
-
-        &:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 10px 25px rgba(112, 28, 28, 0.3);
-        }
-
-        .icon {
-          margin-bottom: 1.3rem;
-          color: $cor-accento;
-          svg {
-            width: 48px;
-            height: 48px;
-            stroke-width: 3;
-          }
-        }
-
-        h3 {
-          color: $cor-primaria;
-          margin-bottom: 0.8rem;
-          font-weight: 700;
-        }
-
-        p {
-          color: $cor-neutro-escuro;
-          font-weight: 400;
-          font-size: 1rem;
-        }
-      }
-    }
-  }
-
-  .why-choose-section {
-    background-color: $cor-neutro-claro;
-    border-radius: 12px;
-    padding: 2rem 3rem;
-    margin-top: 4rem;
-
-    h2 {
-      color: $cor-primaria;
-      text-align: center;
-      font-weight: 700;
-      font-size: 2.5rem;
-      margin-bottom: 1.8rem;
-    }
-
-    ul {
-      list-style: inside disc;
-      max-width: 700px;
-      margin: 0 auto;
-      color: $cor-neutro-escuro;
-      font-size: 1.1rem;
-      font-weight: 500;
-      line-height: 1.7;
-    }
-  }
-
-  .testimonials-section {
-    margin-top: 4rem;
-
-    h2 {
-      color: $cor-primaria;
-      font-weight: 700;
-      font-size: 2.5rem;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-  }
-
-  @media (max-width: 768px) {
-    .hero-section .hero-content {
-      h1 {
-        font-size: 2.5rem;
-      }
-
-      p {
-        font-size: 1.1rem;
-      }
-    }
-
-    .services-section .cards-container {
-      flex-direction: column;
-      align-items: center;
-
-      .card {
-        max-width: 90vw;
-      }
-    }
-
-    .testimonials-section .testimonials-container {
-      flex-direction: column;
-      align-items: center;
-
-      .testimonial {
-        max-width: 90vw;
-      }
-    }
-  }
+  // resto do estilo
 }

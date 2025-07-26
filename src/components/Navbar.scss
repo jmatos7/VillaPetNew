@@ -1,0 +1,46 @@
+$cor-primaria: #701C1C;
+$cor-secundaria: #F0EAD6;
+$cor-accento: #C5A880;
+$cor-neutro-escuro: #2E2E2E;
+$cor-neutro-claro: #E0E0E0;
+
+.navbar-custom {
+  background-color: $cor-primaria !important; // Fundo vermelho escuro
+}
+
+.btn-outline-light {
+  border-color: $cor-secundaria !important;
+  color: $cor-secundaria !important;
+  
+  &:hover{
+    background-color: $cor-secundaria !important;
+    color: $cor-primaria !important;  // Texto com cor primária no hover para contraste
+    border-color: $cor-secundaria !important;
+  }
+}
+
+.offcanvas-custom {
+  background-color: $cor-primaria;
+  color: $cor-secundaria;
+
+  a.nav-link {
+    color: $cor-secundaria;
+    transition: color 0.3s ease;
+
+    &:hover,
+    &:focus {
+      color: $cor-primaria;
+      background-color: $cor-secundaria;
+      border-radius: 4px;
+      text-decoration: none; // Para evitar sublinhado estranho no hover
+    }
+  }
+}
+
+.navbar-brand img {
+  filter: brightness(0) invert(1); // Inverte para branco caso o logo seja escuro
+}
+
+.nav-link span {
+  font-weight: 500;
+}

@@ -1,0 +1,56 @@
+$cor-primaria: #701C1C;
+$cor-secundaria: #F0EAD6;
+$cor-accento: #C5A880;
+$cor-neutro-escuro: #2E2E2E;
+$cor-neutro-claro: #E0E0E0;
+
+.footer-custom {
+  background-color: $cor-primaria;
+  color: $cor-secundaria;
+  padding: 2rem 1rem;
+
+  a {
+    color: $cor-secundaria;
+    margin-right: 15px;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+
+    &:hover,
+    &:focus {
+      color: $cor-accento;
+      text-decoration: none;
+    }
+  }
+
+  h5 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: $cor-secundaria;
+  }
+
+  p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: $cor-secundaria;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      text-align: center;
+      gap: 1.5rem;
+    }
+  }
+
+  .footer-bottom {
+    background-color: $cor-primaria;
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    color: $cor-neutro-claro;
+    text-align: center;
+  }
+}

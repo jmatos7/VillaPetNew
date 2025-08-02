@@ -1,72 +1,89 @@
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { Plus, UserPlus, ChevronLeft, ChevronRight } from "lucide-react";
+import Form from "react-bootstrap/Form";
+import { Plus, UserPlus, X } from "lucide-react";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import autoTable from "jspdf-autotable";
 import "./PainelDeFuncionarios.scss";
 
+// Dados simulados
+const dadosSimulados = {
+  "2025-08-01": [
+    { id: 1, nome: "Rex", tutor: "João", hora: "10:00" },
+    { id: 2, nome: "Mia", tutor: "Ana", hora: "11:30" },
+  ],
+  "2025-08-02": [
+    { id: 3, nome: "Luna", servico: "Tosquia", tutor: "Carlos", hora: "09:00" },
+    { id: 4, nome: "Max", tutor: "Beatriz", hora: "12:00" },
+    { id: 5, nome: "Max", tutor: "Beatriz", hora: "12:00" },
+    { id: 6, nome: "Max", tutor: "Beatriz", hora: "12:00" },
+    { id: 7, nome: "Max", tutor: "Beatriz", hora: "12:00" },
+    { id: 8, nome: "Max", tutor: "Beatriz", hora: "12:00" },
+  ],
+};
+
+const usuariosSimulados = [
+  { id: 1, nome: "João Matos", email: "joao@email.com", telemovel: "912345678" },
+  { id: 2, nome: "Ana Silva", email: "ana@email.com", telemovel: "987654321" },
+  { id: 3, nome: "Ana Silva", email: "ana@email.com", telemovel: "987654321" },
+  { id: 4, nome: "Ana Silva", email: "ana@email.com", telemovel: "987654321" },
+  { id: 5, nome: "Ana Silva", email: "ana@email.com", telemovel: "987654321" },
+  { id: 6, nome: "Amanel", email: "ana@email.com", telemovel: "987654321" },
+  { id: 7, nome: "jona", email: "ana@email.com", telemovel: "987654321" },
+  { id: 8, nome: "quim", email: "ana@email.com", telemovel: "987654321" },
+];
+
+// Animais simulados por utilizador
+const animaisSimulados = {
+  1: [
+    { id: 1, nome: "Rex", raca: "Pastor Alemão", idade: 5 },
+    { id: 2, nome: "Bella", raca: "Labrador", idade: 3 },
+  ],
+  2: [
+    { id: 3, nome: "Mia", raca: "Poodle", idade: 2 },
+  ],
+};
+
+
 const PainelFuncionario = () => {
-  const [dataSelecionada, setDataSelecionada] = useState(new Date());
+  const hoje = new Date();
+  const [dataSelecionada, setDataSelecionada] = useState(hoje.toISOString().split("T")[0]);
   const [marcacoesHoje, setMarcacoesHoje] = useState([]);
   const [users, setUsers] = useState([]);
+  const [userSelecionado, setUserSelecionado] = useState(null);
+  const [filtro, setFiltro] = useState("");
+  
 
-  const formatarData = (data) => {
-    return data.toLocaleDateString("pt-PT", {
+  const usersFiltrados = users.filter((user) =>
+    user.nome.toLowerCase().includes(filtro.toLowerCase())
+  );
+
+
+  useEffect(() => {
+    setMarcacoesHoje(dadosSimulados[dataSelecionada] || []);
+    setUsers(usuariosSimulados);
+  }, [dataSelecionada]);
+
+  const exportarPDF = () => {
+    const doc = new jsPDF();
+    const dataLegivel = new Date(dataSelecionada).toLocaleDateString("pt-PT", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
     });
-  };
-
-  const formatarDataChave = (data) => {
-    return data.toISOString().split("T")[0];
-  };
-
-  const dadosSimulados = {
-    "2025-08-01": [
-      { id: 1, nome: "Rex", tutor: "João", hora: "10:00" },
-      { id: 2, nome: "Mia", tutor: "Ana", hora: "11:30" },
-    ],
-    "2025-08-02": [
-      { id: 3, nome: "Luna", tutor: "Carlos", hora: "09:00" },
-      { id: 4, nome: "Max", tutor: "Beatriz", hora: "12:00" },
-    ],
-    "2025-08-03": [],
-  };
-
-  useEffect(() => {
-    const chave = formatarDataChave(dataSelecionada);
-    setMarcacoesHoje(dadosSimulados[chave] || []);
-
-    setUsers([
-      { id: 1, nome: "João Matos", email: "joao@email.com" },
-      { id: 2, nome: "Ana Silva", email: "ana@email.com" },
-    ]);
-  }, [dataSelecionada]);
-
-  const exportarPDF = () => {
-    const doc = new jsPDF();
-    doc.text(`Marcações de ${formatarData(dataSelecionada)}`, 14, 15);
-    doc.autoTable({
-      head: [["Hora", "Animal", "Tutor"]],
-      body: marcacoesHoje.map((m) => [m.hora, m.nome, m.tutor]),
+    doc.text(`Marcações de ${dataLegivel}`, 14, 15);
+    autoTable(doc, {
+      head: [["Hora","Serviço", "Animal", "Tutor"]],
+      body: marcacoesHoje.map(({ hora,servico, nome, tutor }) => [hora, servico,nome, tutor]),
       startY: 20,
     });
-    doc.save(`marcacoes-${formatarDataChave(dataSelecionada)}.pdf`);
-  };
-
-  const mudarDia = (dias) => {
-    const novaData = new Date(dataSelecionada);
-    novaData.setDate(novaData.getDate() + dias);
-    setDataSelecionada(novaData);
+    doc.save(`marcacoes-${dataSelecionada}.pdf`);
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 painel-funcionario">
       <h1 className="mb-4" style={{ color: "#701C1C" }}>
         Painel do Funcionário
       </h1>
@@ -80,42 +97,39 @@ const PainelFuncionario = () => {
               <Button variant="outline-secondary" onClick={exportarPDF}>
                 Exportar PDF
               </Button>
-              <Button variant="primary">
+              <Button className="botao-add">
                 <Plus size={18} className="me-2" />
                 Nova Marcação
               </Button>
             </div>
           </div>
 
-          {/* Controlo de data */}
-          <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-            <div className="d-flex align-items-center gap-2">
-              <Button variant="outline-secondary" onClick={() => mudarDia(-1)} size="sm">
-                <ChevronLeft size={16} />
-              </Button>
+          <Form.Group className="mb-3" controlId="formData">
+            <Form.Label>Selecionar Data</Form.Label>
+            <Form.Control
+              type="date"
+              value={dataSelecionada}
+              style={{ maxWidth: "150px" }}
+              onChange={(e) => setDataSelecionada(e.target.value)}
+            />
+          </Form.Group>
 
-              <DatePicker
-                selected={dataSelecionada}
-                onChange={(date) => setDataSelecionada(date)}
-                dateFormat="dd/MM/yyyy"
-                className="form-control"
-              />
-
-              <Button variant="outline-secondary" onClick={() => mudarDia(1)} size="sm">
-                <ChevronRight size={16} />
-              </Button>
-            </div>
-
-            <strong className="text-muted">{formatarData(dataSelecionada)}</strong>
-          </div>
+          <strong className="text-muted mb-3 d-block">
+            {new Date(dataSelecionada).toLocaleDateString("pt-PT", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </strong>
 
           {marcacoesHoje.length === 0 ? (
             <p className="text-muted">Sem marcações neste dia.</p>
           ) : (
             <ul className="list-group">
-              {marcacoesHoje.map((m) => (
+              {marcacoesHoje.map(({ id, hora, nome, tutor }) => (
                 <li
-                  key={m.id}
+                  key={id}
                   className="list-group-item"
                   style={{
                     backgroundColor: "#E0E0E0",
@@ -124,7 +138,7 @@ const PainelFuncionario = () => {
                     marginBottom: "8px",
                   }}
                 >
-                  <strong>{m.hora}</strong> - {m.nome} ({m.tutor})
+                  <strong>{hora}</strong> - {nome} ({tutor})
                 </li>
               ))}
             </ul>
@@ -132,35 +146,81 @@ const PainelFuncionario = () => {
         </Card.Body>
       </Card>
 
-      {/* Utilizadores */}
-      <Card>
-        <Card.Body>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h4>Utilizadores</h4>
-            <Button variant="primary">
-              <UserPlus size={18} className="me-2" />
-              Novo Utilizador
-            </Button>
-          </div>
-          <ul className="list-group">
-            {users.map((u) => (
-              <li
-                key={u.id}
-                className="list-group-item"
-                style={{
-                  backgroundColor: "#E0E0E0",
-                  border: "1px solid #C5A880",
-                  borderRadius: "12px",
-                  marginBottom: "8px",
-                }}
-              >
-                <strong>{u.nome}</strong>{" "}
-                <span className="text-muted">({u.email})</span>
-              </li>
-            ))}
-          </ul>
-        </Card.Body>
-      </Card>
+      {/* Utilizadores + detalhe */}
+      <div className="d-flex flex-wrap gap-4">
+        <Card className="usuarios-lista flex-grow-1" style={{ minWidth: 280, maxWidth: 350 }}>
+          <Card.Body>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4>Utilizadores</h4>
+              <Button className="botao-add">
+                <UserPlus size={18} className="me-2" />
+                Novo Utilizador
+              </Button>
+            </div>
+
+            <Form.Control
+              type="text"
+              placeholder="Procurar utilizador..."
+              className="mb-3"
+              value={filtro}
+              onChange={(e) => setFiltro(e.target.value)}
+            />
+
+            <div className="scroll-area">
+              <ul className="list-group">
+                {usersFiltrados.map(({ id, nome, email }) => (
+                  <li
+                    key={id}
+                    className={`list-group-item ${userSelecionado?.id === id ? "ativo" : ""}`}
+                    style={{
+                      backgroundColor: "#E0E0E0",
+                      border: "1px solid #C5A880",
+                      borderRadius: "12px",
+                      marginBottom: "8px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setUserSelecionado(users.find(u => u.id === id))}
+                  >
+                    <strong>{nome}</strong>{" "}
+                    <span className="text-muted">({email})</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Card.Body>
+        </Card>
+
+
+        {/* Painel detalhes */}
+        {userSelecionado && (
+          <Card className="detalhes-usuario flex-grow-1" style={{ minWidth: 280, maxWidth: 400 }}>
+            <Card.Body>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h4>Detalhes do Utilizador</h4>
+                <Button variant="outline-secondary" size="sm" onClick={() => setUserSelecionado(null)}>
+                  <X size={18} />
+                </Button>
+              </div>
+              <p><strong>Nome:</strong> {userSelecionado.nome}</p>
+              <p><strong>Email:</strong> {userSelecionado.email}</p>
+              <p><strong>Telemóvel:</strong> {userSelecionado.telemovel || "Não registado"}</p>
+
+              <h5 className="mt-4">Animais</h5>
+              {animaisSimulados[userSelecionado.id]?.length > 0 ? (
+                <ul>
+                  {animaisSimulados[userSelecionado.id].map(({ id, nome, raca, idade }) => (
+                    <li key={id}>
+                      <strong>{nome}</strong> - {raca}, {idade} anos
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Sem animais registados.</p>
+              )}
+            </Card.Body>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };

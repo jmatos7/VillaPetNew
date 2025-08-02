@@ -11,6 +11,8 @@ import Profile from './pages/Profile';
 import Admin from './pages/PainelDeFuncionario';
 import { AuthModalProvider } from './contexts/AuthModalContext'; 
 
+
+
 function App() {
   return (
     <AuthModalProvider>

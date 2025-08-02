@@ -1,5 +1,9 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { FaInstagram } from "react-icons/fa6";
+import { IoLocationOutline } from "react-icons/io5";
+import { AiOutlineMail } from "react-icons/ai";
+import { FiPhone } from "react-icons/fi";
 import './Contact.scss';
 
 export default function Contact() {
@@ -11,9 +15,10 @@ export default function Contact() {
 
           <div className="contact-box">
             <ul className="list-unstyled mb-0 contact-list">
-              <li><strong>Telefone:</strong> +351 912 345 678</li>
-              <li><strong>Email:</strong> villapet@gmail.com</li>
-              <li><strong>Localização:</strong> R. Vieira Portuense, Porto, Portugal</li>
+              <li><strong><FiPhone /> Telefone:</strong> +351 912 345 678</li>
+              <li><strong><AiOutlineMail /> Email:</strong> villapet@gmail.com</li>
+              <li><strong><FaInstagram /> Instagram:</strong> villapet</li>
+              <li><strong><IoLocationOutline /> Localização:</strong> R. Vieira Portuense, Porto, Portugal</li>
             </ul>
           </div>
 

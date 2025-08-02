@@ -1,5 +1,5 @@
 // Profile.js
-import React, { useState, useEffect, useRef,useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
     Container,
     Row,
@@ -19,7 +19,11 @@ const defaultAnimalImg =
 // ... (imports e defaultAnimalImg iguais)
 
 export default function Profile() {
-    const [phone, setPhone] = useState("");
+    const [user, setUser] = useState({
+        nome: "João Matos",
+        email: "joao@email.com",
+        telefone: "912345678",
+    });
     const [animals, setAnimals] = useState([]);
     const [newAnimal, setNewAnimal] = useState({
         name: "",
@@ -141,8 +145,12 @@ export default function Profile() {
     };
 
     const handlePhoneChange = (e) => {
-        const val = e.target.value.replace(/\D/g, "");
-        if (val.length <= 9) setPhone(val);
+        const valor = e.target.value;
+
+        // Aceitar só números, até 9 caracteres
+        if (/^\d{0,9}$/.test(valor)) {
+            setUser((prev) => ({ ...prev, telefone: valor }));
+        }
     };
 
     return (
@@ -150,20 +158,28 @@ export default function Profile() {
             <h1 className="text-center mb-4">Perfil do Usuário</h1>
 
             <Row className="mb-5 justify-content-center">
-                <Col xs={12} md={6}>
-                    <Form.Group controlId="phoneInput">
-                        <Form.Label>Número de Telemóvel</Form.Label>
+                <Col xs={12} md={6} className="info-pessoal">
+                    <div className="campo-info">
+                        <p className="texto"><strong>Nome:</strong> {user.nome}</p>
+                    </div>
+
+                    <div className="campo-info">
+                        <p className="texto"><strong>Email:</strong> {user.email}</p>
+                    </div>
+
+                    <div className="campo-info">
+                        <label><strong>Número de Telemóvel:</strong></label>
                         <InputGroup>
-                            <InputGroup.Text className="prefix">+351</InputGroup.Text>
-                            <Form.Control
+                            <input
                                 type="tel"
+                                className="form-control"
                                 placeholder="912345678"
-                                value={phone}
+                                value={user.telefone}
                                 onChange={handlePhoneChange}
                                 maxLength={9}
                             />
                         </InputGroup>
-                    </Form.Group>
+                    </div>
                 </Col>
             </Row>
 
@@ -286,10 +302,14 @@ export default function Profile() {
                                 min="0"
                                 placeholder="Idade"
                                 value={newAnimal.age}
-                                onChange={(e) =>
-                                    setNewAnimal({ ...newAnimal, age: e.target.value })
-                                }
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (val === "" || (Number(val) >= 0 && Number.isInteger(Number(val)))) {
+                                        setNewAnimal({ ...newAnimal, age: val });
+                                    }
+                                }}
                             />
+
                         </Form.Group>
 
                         <Form.Group className="mb-4" controlId="animalPhoto">

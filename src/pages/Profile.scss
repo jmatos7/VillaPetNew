@@ -9,16 +9,56 @@
     color: $cor-neutro-escuro;
     padding-bottom: 4rem;
 
-    h1, h2, h3 {
+    h1,
+    h2,
+    h3 {
       color: $cor-primaria;
     }
 
-    .form-label {
-      font-weight: 600;
-      color: $cor-primaria;
+    .info-pessoal {
+      padding: 2rem;
+
+      .campo-info {
+        margin-bottom: 1.5rem;
+
+        label {
+          display: block;
+          font-style: bold;
+          font-size: 1.7rem;
+          color: $cor-primaria;
+          margin-bottom: 0.3rem;
+        }
+
+        .texto {
+          font-size: 1.6rem;
+          padding: 0.6rem 1rem;
+          border-radius: 8px;
+          color: $cor-neutro-escuro;
+          strong {
+            color: $cor-primaria;
+          }
+        }
+
+        .input-group {
+          .prefix {
+            background-color: $cor-accento;
+            color: white;
+            font-weight: bold;
+          }
+
+          .form-control {
+            &:focus {
+              border-color: $cor-accento;
+              box-shadow: 0 0 0 0.2rem rgba($cor-accento, 0.25);
+            }
+          }
+        }
+      }
     }
 
-    .form-control, .form-select {
+
+    .form-control,
+    .form-select {
       border: 2px solid $cor-accento;
       background-color: $cor-neutro-claro;
       color: $cor-neutro-escuro;
@@ -31,23 +71,23 @@
     }
 
     .form-select {
-  appearance: none;
-  background-color: $cor-neutro-claro;
-  border: 2px solid $cor-accento;
-  color: $cor-neutro-escuro;
-  font-weight: 500;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='%23701C1C' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 16px 16px;
-  padding-right: 2rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
+      appearance: none;
+      background-color: $cor-neutro-claro;
+      border: 2px solid $cor-accento;
+      color: $cor-neutro-escuro;
+      font-weight: 500;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='%23701C1C' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 16px 16px;
+      padding-right: 2rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
 
-  &:focus {
-    border-color: $cor-primaria;
-    box-shadow: 0 0 0 0.2rem rgba(112, 28, 28, 0.25);
-  }
-}
+      &:focus {
+        border-color: $cor-primaria;
+        box-shadow: 0 0 0 0.2rem rgba(112, 28, 28, 0.25);
+      }
+    }
 
 
     .prefix {

@@ -1,13 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { FaPaw, FaHeart, FaShieldAlt, FaDog, FaBone, FaBath } from 'react-icons/fa';
-import { useState } from 'react';
 import "./Home.scss";
 
 export default function Home() {
 
-  const [servicoAtivo, setServicoAtivo] = useState(null);
+ const [servicoAtivo, setServicoAtivo] = useState(null);
 
+  // Hero slideshow
+  const imagensHero = [
+    {
+      url: "/img/animais/hero/alec-favale-Ivzo69e18nk-unsplash.jpg",
+    },
+    {
+      url: "/img/animais/hero/andrea-lightfoot-IrZ5xXXCsn4-unsplash.jpg",
+    },
+    {
+      url: "/img/animais/hero/elena-mozhvilo-y2Rec9stEdQ-unsplash.jpg",
+    },
+    {
+      url: "/img/animais/hero/keith-tanner-CN9x4CR5TAg-unsplash.jpg",
+    },
+    {
+      url: "/img/animais/hero/redd-francisco-C_TkoY43wHQ-unsplash.jpg",
+    },
+    {
+      url: "/img/animais/hero/rhaul-velasquez-alva-jCM48W7y6Y8-unsplash.jpg",
+    },
+    {
+      url: "/img/animais/hero/wolfgang-hasselmann-gcioe8naQys-unsplash.jpg",
+    },
+  ];
+
+  const [indiceAtual, setIndiceAtual] = useState(0);
+  
   const servicos = [
     {
       id: 1,
@@ -31,7 +57,13 @@ export default function Home() {
       detalhes: 'Métodos positivos e eficazes com educadores certificados.'
     }
   ];
-
+  
+  useEffect(() => {
+  const intervalo = setInterval(() => {
+    setIndiceAtual((prev) => (prev + 1) % imagensHero.length);
+  }, 5000);
+  return () => clearInterval(intervalo);
+}, [indiceAtual, imagensHero.length]);
 
   const toggleCard = (id) => {
     setServicoAtivo(servicoAtivo === id ? null : id);
@@ -42,41 +74,45 @@ export default function Home() {
       <section
         className="hero d-flex align-items-center"
       >
-        <img
-          src="/img/animais/estadia.jpg"
-          alt="animal hero"
-          style={{
-            width: '100%',
-            height: '100vh',
-            objectFit: 'cover',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            zIndex: -1,
-          }}
-        />
 
-        <Container>
+        <div className="hero-bg-image">
+          {imagensHero.map((imagem, idx) => (
+          <img
+            key={idx}
+            src={imagem.url}
+            alt={`animais ${idx}`}
+            className={idx === indiceAtual ? 'active' : ''}
+            loading="lazy"
+          />
+        ))}
+        </div>
+        {/* Overlay escura para destacar o texto */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.45)',
+          zIndex: 0,
+        }} />
+
+        <Container style={{ zIndex: 1, position: 'relative' }}>
           <Row>
             <Col md={8} lg={6}>
               <h1 className="hero-title">Bem-vindo ao VillaPet</h1>
-              <p className="hero-subtitle">
-                Cuidados e carinho para o seu melhor amigo.
-              </p>
+              <p className="hero-subtitle">Cuidados e carinho para o seu melhor amigo.</p>
 
               <Button
-  className="btn-villapet"
-  size="lg"
-  onClick={() => {
-    const section = document.getElementById('sobre');
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-  }}
->
-  <FaPaw style={{ marginRight: '8px' }} />
-  Saiba Mais
-</Button>
+                className="btn-villapet"
+                size="lg"
+                onClick={() => {
+                  const section = document.getElementById('sobre');
+                  if (section) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
+                <FaPaw style={{ marginRight: '8px' }} />
+                Saiba Mais
+              </Button>
             </Col>
           </Row>
         </Container>

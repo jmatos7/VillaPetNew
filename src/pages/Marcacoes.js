@@ -11,6 +11,11 @@ export default function Marcacoes() {
   const [showHorarioModal, setShowHorarioModal] = useState(false);
   const [showAnimalModal, setShowAnimalModal] = useState(false);
   const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
+  const [showServicoModal, setShowServicoModal] = useState(false);
+  const [servicoSelecionado, setServicoSelecionado] = useState(null);
+
+
+  const servicosDisponiveis = ['Banho & Tosquia', 'Hospedagem', 'Adestramento'];
 
   // Simulação de animais
   const animaisDoUtilizador = ['Bobby', 'Luna', 'Thor', 'Nina'];
@@ -43,11 +48,22 @@ export default function Marcacoes() {
   const marcarHorario = (horario) => {
     setHorarioSelecionado(horario);
     setShowHorarioModal(false);
+    setShowServicoModal(true);
+  };
+
+  const selecionarServico = (servico) => {
+    setServicoSelecionado(servico);
+    setShowServicoModal(false);
     setShowAnimalModal(true);
   };
 
+
   const selecionarAnimal = (animal) => {
-    alert(`Marcaçāo confirmada:\nData: ${dataSelecionada}\nHora: ${horarioSelecionado}\nAnimal: ${animal}`);
+    alert(`Marcaçāo confirmada:
+          Data: ${dataSelecionada}
+          Hora: ${horarioSelecionado}
+          Serviço: ${servicoSelecionado}
+          Animal: ${animal}`);
     setShowAnimalModal(false);
   };
 
@@ -73,25 +89,55 @@ export default function Marcacoes() {
           <Modal.Title>Disponibilidade - {dataSelecionada}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-body-custom">
-          <ListGroup>
-            {horariosDisponiveis.map((hora, idx) => (
-              <ListGroup.Item
-                action
-                key={idx}
-                onClick={() => marcarHorario(hora)}
-                className="item-horario"
-              >
-                {hora}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
+          <div className="scroll-container">
+            <ListGroup>
+              {horariosDisponiveis.map((hora, idx) => (
+                <ListGroup.Item
+                  action
+                  key={idx}
+                  onClick={() => marcarHorario(hora)}
+                  className="item-horario"
+                >
+                  {hora}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </div>
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowHorarioModal(false)}>
             Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Modal de Serviços */}
+      <Modal show={showServicoModal} onHide={() => setShowServicoModal(false)} centered>
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title>Seleciona o serviço</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="modal-body-custom">
+          <ListGroup>
+            {servicosDisponiveis.map((servico, idx) => (
+              <ListGroup.Item
+                action
+                key={idx}
+                onClick={() => selecionarServico(servico)}
+                className="item-horario"
+              >
+                {servico}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowServicoModal(false)}>
+            Cancelar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
 
       {/* Modal de Animais */}
       <Modal show={showAnimalModal} onHide={() => setShowAnimalModal(false)} centered>

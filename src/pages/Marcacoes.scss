@@ -47,9 +47,46 @@ body{
 
 .modal-body-custom {
   background-color: $cor-neutro-claro;
-  height: 350px;
-  overflow-y: scroll;
+  padding-right: 0;
+  padding-left: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+
+  .scroll-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 10px;
+
+    // Scrollbar estilizada
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $cor-accento;
+      border-radius: 3px;
+    }
+  }
+
+  .list-group {
+    margin: 0;
+  }
+
+  .list-group-item {
+    background-color: white;
+    color: $cor-primaria;
+    border-left: 4px solid $cor-accento;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $cor-accento;
+      color: white;
+    }
+  }
 }
+
+
 
 .item-horario {
   background-color: white;

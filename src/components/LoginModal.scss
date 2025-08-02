@@ -1,0 +1,119 @@
+$cor-primaria: #701C1C;
+$cor-secundaria: #F0EAD6;
+$cor-accento: #C5A880;
+$cor-neutro-escuro: #2E2E2E;
+$cor-neutro-claro: #E0E0E0;
+
+.modal-header-custom {
+    background-color: $cor-primaria;
+    color: $cor-neutro-claro;
+
+    .modal-title {
+        font-weight: bold;
+        font-size: 1.25rem;
+    }
+
+    .btn-close {
+        filter: invert(1);
+    }
+}
+
+.modal-dialog {
+    /* deixa o modal crescer normalmente */
+    margin: 1.5rem auto;
+    display: block; // nada de flex aqui para não interferir na altura
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.modal-content {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+}
+
+.modal-body-custom {
+    background-color: $cor-secundaria;
+    height: 100%;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: visible !important;
+
+    .text-danger {
+        font-weight: 500;
+    }
+
+    .mb-3 {
+        margin: 0; // espaçamento controlado pelo gap
+    }
+
+    .mb-3 input,
+    .mb-3 textarea,
+    .mb-3 select {
+        border: 1px solid #ccc; // borda normal
+        transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .mb-3 input:hover,
+    .mb-3 input:focus,
+    .mb-3 textarea:hover,
+    .mb-3 textarea:focus,
+    .mb-3 select:hover,
+    .mb-3 select:focus {
+        outline: none;
+        border-color: $cor-accento;
+        box-shadow: 0 0 6px 2px $cor-accento;
+    }
+
+
+    .botao-auth {
+        background-color: $cor-primaria;
+        border: 2px solid $cor-accento;
+        color: $cor-neutro-claro;
+        width: 100%;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.25s ease-in-out;
+
+        &:hover {
+            background-color: $cor-accento;
+            color: $cor-primaria;
+            border-color: $cor-primaria;
+            cursor: pointer;
+        }
+
+        &:focus,
+        &:active {
+            outline: none;
+            box-shadow: 0 0 0 0.25rem rgba(197, 168, 128, 0.4);
+        }
+    }
+
+    .text-center p {
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        color: $cor-neutro-escuro;
+
+        .btn-link {
+            color: $cor-primaria;
+            font-weight: 600;
+            padding: 0;
+            text-decoration: underline;
+
+            &:hover {
+                color: $cor-accento;
+            }
+        }
+    }
+
+
+
+}

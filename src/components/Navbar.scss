@@ -5,16 +5,34 @@ $cor-neutro-escuro: #2E2E2E;
 $cor-neutro-claro: #E0E0E0;
 
 .navbar-custom {
-  background-color: $cor-primaria !important; // Fundo vermelho escuro
+  position: sticky;
+  top: 0;
+  z-index: 1040;
+  background-color: $cor-primaria;
+  transition: all 0.3s ease;
+
+  &.scrolled {
+    background-color: rgba(112, 28, 28, 0.7);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-link {
+    color: $cor-secundaria !important; // cor clara
+
+    &:hover {
+      color: $cor-accento !important; // dourado ao passar o rato
+    }
+  }
 }
 
 .btn-outline-light {
   border-color: $cor-secundaria !important;
   color: $cor-secundaria !important;
-  
-  &:hover{
+
+  &:hover {
     background-color: $cor-secundaria !important;
-    color: $cor-primaria !important;  // Texto com cor primária no hover para contraste
+    color: $cor-primaria !important;
     border-color: $cor-secundaria !important;
   }
 }
@@ -32,13 +50,13 @@ $cor-neutro-claro: #E0E0E0;
       color: $cor-primaria;
       background-color: $cor-secundaria;
       border-radius: 4px;
-      text-decoration: none; // Para evitar sublinhado estranho no hover
+      text-decoration: none;
     }
   }
 }
 
 .navbar-brand img {
-  filter: brightness(0) invert(1); // Inverte para branco caso o logo seja escuro
+  filter: brightness(0) invert(1); // Inverter caso o logo seja escuro
 }
 
 .nav-link span {

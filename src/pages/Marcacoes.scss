@@ -1,0 +1,65 @@
+// 🎨 Paleta de cores
+$cor-primaria: #701C1C;
+$cor-secundaria: #F0EAD6;
+$cor-accento: #C5A880;
+$cor-neutro-escuro: #2E2E2E;
+$cor-neutro-claro: #E0E0E0;
+
+body{
+  background-color: $cor-secundaria;
+}
+
+.marcacoes-container {
+  border-radius: 12px;
+  padding: 2rem;
+
+  .titulo {
+    color: $cor-primaria;
+    font-weight: bold;
+  }
+
+  .descricao {
+    color: $cor-neutro-escuro;
+  }
+
+  .calendar-wrapper {
+    .fc {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .fc-daygrid-day:not(.fc-day-disabled) {
+  cursor: pointer;
+}
+    a{
+      color:$cor-primaria;
+      text-decoration: none;
+    }
+  }
+}
+
+// Modal personalizado
+.modal-header-custom {
+  background-color: $cor-primaria;
+  color: white;
+}
+
+.modal-body-custom {
+  background-color: $cor-neutro-claro;
+  height: 350px;
+  overflow-y: scroll;
+}
+
+.item-horario {
+  background-color: white;
+  color: $cor-primaria;
+  border-left: 4px solid $cor-accento;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $cor-accento;
+    color: white;
+  }
+}

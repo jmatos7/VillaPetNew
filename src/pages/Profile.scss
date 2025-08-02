@@ -1,0 +1,160 @@
+  $cor-primaria: #701C1C;
+  $cor-secundaria: #F0EAD6;
+  $cor-accento: #C5A880;
+  $cor-neutro-escuro: #2E2E2E;
+  $cor-neutro-claro: #E0E0E0;
+
+  .profile-page {
+    background-color: $cor-secundaria;
+    color: $cor-neutro-escuro;
+    padding-bottom: 4rem;
+
+    h1, h2, h3 {
+      color: $cor-primaria;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: $cor-primaria;
+    }
+
+    .form-control, .form-select {
+      border: 2px solid $cor-accento;
+      background-color: $cor-neutro-claro;
+      color: $cor-neutro-escuro;
+      font-weight: 500;
+
+      &:focus {
+        border-color: $cor-primaria;
+        box-shadow: 0 0 0 0.2rem rgba(112, 28, 28, 0.25);
+      }
+    }
+
+    .form-select {
+  appearance: none;
+  background-color: $cor-neutro-claro;
+  border: 2px solid $cor-accento;
+  color: $cor-neutro-escuro;
+  font-weight: 500;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='%23701C1C' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 16px;
+  padding-right: 2rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &:focus {
+    border-color: $cor-primaria;
+    box-shadow: 0 0 0 0.2rem rgba(112, 28, 28, 0.25);
+  }
+}
+
+
+    .prefix {
+      background-color: $cor-accento;
+      color: white;
+      font-weight: bold;
+      border: 2px solid $cor-accento;
+    }
+
+    .breed-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background-color: $cor-neutro-claro;
+      border: 2px solid $cor-accento;
+      border-top: none;
+      max-height: 220px;
+      overflow-y: auto;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+      .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: $cor-secundaria;
+        }
+
+        .breed-image {
+          width: 40px;
+          height: 40px;
+          object-fit: cover;
+          border-radius: 50%;
+          border: 2px solid $cor-accento;
+        }
+
+        span {
+          font-weight: 500;
+          color: $cor-neutro-escuro;
+        }
+      }
+    }
+
+    .animal-card {
+      border: 2px solid $cor-accento;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.2s ease-in-out;
+
+      .image-wrapper {
+        max-height: 180px;
+        overflow: hidden;
+
+        img {
+          object-fit: cover;
+          height: 100%;
+          width: 100%;
+          border-bottom: 2px solid $cor-accento;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(112, 28, 28, 0.15);
+      }
+
+      .card-body {
+        background-color: $cor-neutro-claro;
+        padding: 1rem;
+      }
+
+      .btn-outline-danger {
+        border-color: $cor-primaria;
+        color: $cor-primaria;
+        font-weight: 500;
+
+        &:hover {
+          background-color: $cor-primaria;
+          color: white;
+        }
+      }
+    }
+
+    .btn-primary {
+      background-color: $cor-primaria;
+      border: none;
+      font-weight: 600;
+
+      &:hover {
+        background-color: #5a1616; // valor manual para um hover mais escuro
+      }
+    }
+
+    .preview-wrapper {
+      display: flex;
+      justify-content: center;
+
+      img {
+        border: 2px solid $cor-accento;
+        max-height: 180px;
+      }
+    }
+  }

@@ -13,12 +13,215 @@ $cor-neutro-claro: #E0E0E0;
 
   .hero-bg-image {
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: contain;
     z-index: -1;
   }
 
-  // resto do estilo
+  .btn-primary {
+    background-color: $cor-primaria;
+    color: $cor-secundaria;
+    border: none;
+    border-radius: 12px; // borda arredondada
+    padding: 12px 24px;
+    font-size: 1.125rem; // 18px
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); // sombra leve
+    outline: none;
+
+    &:hover {
+      background-color: $cor-secundaria;
+      color: $cor-primaria;
+      transform: translateY(-2px); // animação subtil ao hover
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+
+  }
+
+  .btn-villapet {
+    background-color: $cor-primaria;
+    color: $cor-secundaria;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; // espaço entre ícone e texto
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    outline: none;
+
+    svg {
+      font-size: 1.2em; // tamanho do ícone
+    }
+
+    &:hover {
+      background-color: $cor-secundaria;
+      color: $cor-primaria;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+  }
 }
+
+
+section {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.secao-sobre {
+  padding: 80px 0;
+  background-color: $cor-neutro-claro;
+  color: $cor-neutro-escuro;
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $cor-primaria;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  img {
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    text-align: center;
+
+    img {
+      margin-bottom: 30px;
+    }
+  }
+}
+
+.valores-villapet {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+
+  li {
+    display: flex;
+    align-items: center;
+    font-size: 1.05rem;
+    margin-bottom: 15px;
+
+    .icon {
+      color: $cor-accento;
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.frase-villapet {
+  margin-top: 30px;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: $cor-primaria;
+  border-left: 4px solid $cor-accento;
+  padding-left: 12px;
+}
+
+.secao-servicos {
+  background-color: $cor-neutro-claro;
+  padding: 4rem 0;
+
+  h2 {
+    color: $cor-primaria;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .card-servico {
+    color: $cor-primaria;
+    background-color: #fff;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .icone-servico {
+      font-size: 2.5rem;
+      color: $cor-accento;
+    }
+
+    .descricao-servico {
+      color: $cor-neutro-escuro;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .detalhes-servico {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.97);
+      color: $cor-neutro-escuro;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 2;
+      border-radius: 1rem;
+
+      p {
+        font-size: 0.95rem;
+        margin: 0;
+      }
+    }
+
+    &.ativo {
+      .descricao-servico {
+        opacity: 0;
+      }
+
+      .detalhes-servico {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
+}
+

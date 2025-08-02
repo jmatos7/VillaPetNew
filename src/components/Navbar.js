@@ -1,21 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthModalContext } from '../contexts/AuthModalContext';
 import { Navbar, Container, Offcanvas, Nav, Button, Image } from 'react-bootstrap';
 import { FiMenu, FiHome, FiCalendar, FiPhone, FiUser, FiLogIn } from 'react-icons/fi';
 import './Navbar.scss';
 
 export default function ModernNavbar() {
   const [show, setShow] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // simula estado de login
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  // Aqui poderia ser a função real de logout/login com backend
   const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
+  const { setShowModal } = useContext(AuthModalContext);
+
+  // Detetar scroll para aplicar fundo translúcido
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
-      <Navbar className="navbar-custom py-3" variant="dark" expand={false}>
+      <Navbar
+        className={`navbar-custom py-3 ${scrolled ? 'scrolled' : ''}`}
+        expand={false}
+      >
         <Container fluid>
           <Button variant="outline-light" onClick={handleShow} aria-label="Abrir menu">
             <FiMenu size={24} />
@@ -32,10 +46,11 @@ export default function ModernNavbar() {
                 <span className="d-none d-md-inline">Meu Perfil</span>
               </Nav.Link>
             ) : (
-              <Nav.Link href="/login" className="d-flex align-items-center" onClick={toggleLogin}>
+              <Nav.Link className="d-flex align-items-center" onClick={() => setShowModal(true)}>
                 <FiLogIn size={22} className="me-1" />
                 <span className="d-none d-md-inline">Login</span>
               </Nav.Link>
+
             )}
           </Nav>
         </Container>

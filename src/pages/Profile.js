@@ -16,14 +16,14 @@ import "./Profile.scss";
 const defaultAnimalImg =
     "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=300&q=80";
 
-// ... (imports e defaultAnimalImg iguais)
-
 export default function Profile() {
     const [user, setUser] = useState({
         nome: "João Matos",
         email: "joao@email.com",
         telefone: "912345678",
+        telefone2: "",
     });
+
     const [animals, setAnimals] = useState([]);
     const [newAnimal, setNewAnimal] = useState({
         name: "",
@@ -41,7 +41,6 @@ export default function Profile() {
     const suggestionsRef = useRef(null);
     const [debouncedBreed] = useDebounce(newAnimal.breed, 300);
 
-    // Fetch de raças
     useEffect(() => {
         async function fetchBreeds() {
             try {
@@ -66,11 +65,8 @@ export default function Profile() {
         return newAnimal.type === "Cão" ? dogBreeds : catBreeds;
     }, [newAnimal.type, dogBreeds, catBreeds]);
 
-    // Geração de sugestões com imagem
     useEffect(() => {
         const query = debouncedBreed.trim().toLowerCase();
-
-        // Só procurar se houver pelo menos 3 caracteres
         if (query.length < 3) {
             setSuggestions([]);
             setShowSuggestions(false);
@@ -78,7 +74,6 @@ export default function Profile() {
         }
 
         const domain = newAnimal.type === "Cão" ? "thedogapi" : "thecatapi";
-
         const filtered = breedList.filter((breed) =>
             breed.name.toLowerCase().includes(query)
         );
@@ -115,18 +110,11 @@ export default function Profile() {
         return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
-    const addAnimal = (e) => {
-        e.preventDefault();
-        if (!newAnimal.name.trim()) return alert("O nome é obrigatório!");
-        setAnimals((prev) => [...prev, { ...newAnimal, id: Date.now() }]);
-        setNewAnimal({ name: "", breed: "", age: "", type: "Cão", photo: "" });
-        setPhotoPreview(null);
-        setSuggestions([]);
-        setShowSuggestions(false);
-    };
-
-    const removeAnimal = (id) => {
-        setAnimals((prev) => prev.filter((a) => a.id !== id));
+    const handlePhoneChange = (e, campo = "telefone") => {
+        const valor = e.target.value;
+        if (/^\d{0,9}$/.test(valor)) {
+            setUser((prev) => ({ ...prev, [campo]: valor }));
+        }
     };
 
     const handlePhotoChange = (e) => {
@@ -144,21 +132,30 @@ export default function Profile() {
         reader.readAsDataURL(file);
     };
 
-    const handlePhoneChange = (e) => {
-        const valor = e.target.value;
+    const addAnimal = (e) => {
+        e.preventDefault();
+        if (!newAnimal.name.trim()) return alert("O nome é obrigatório!");
+        if (newAnimal.age && Number(newAnimal.age) < 0)
+            return alert("A idade não pode ser negativa!");
 
-        // Aceitar só números, até 9 caracteres
-        if (/^\d{0,9}$/.test(valor)) {
-            setUser((prev) => ({ ...prev, telefone: valor }));
-        }
+        setAnimals((prev) => [...prev, { ...newAnimal, id: Date.now() }]);
+        setNewAnimal({ name: "", breed: "", age: "", type: "Cão", photo: "" });
+        setPhotoPreview(null);
+        setSuggestions([]);
+        setShowSuggestions(false);
+        document.getElementById("animalPhotoInput").value = "";
+    };
+
+    const removeAnimal = (id) => {
+        setAnimals((prev) => prev.filter((a) => a.id !== id));
     };
 
     return (
         <Container className="profile-page my-5">
             <h1 className="text-center mb-4">Perfil do Usuário</h1>
 
-            <Row className="mb-5 justify-content-center">
-                <Col xs={12} md={6} className="info-pessoal">
+            <Card className="mb-4">
+                <Card.Body>
                     <div className="campo-info">
                         <p className="texto"><strong>Nome:</strong> {user.nome}</p>
                     </div>
@@ -168,20 +165,36 @@ export default function Profile() {
                     </div>
 
                     <div className="campo-info">
-                        <label><strong>Número de Telemóvel:</strong></label>
+                        <label htmlFor="telefone"><strong>Número de Telemóvel:</strong></label>
                         <InputGroup>
                             <input
+                                id="telefone"
                                 type="tel"
-                                className="form-control"
+                                className="phone-input "
                                 placeholder="912345678"
                                 value={user.telefone}
-                                onChange={handlePhoneChange}
+                                onChange={(e) => handlePhoneChange(e, "telefone")}
                                 maxLength={9}
                             />
                         </InputGroup>
                     </div>
-                </Col>
-            </Row>
+
+                    <div className="campo-info">
+                        <label htmlFor="segundoContacto"><strong>Segundo Contacto (opcional):</strong></label>
+                        <InputGroup>
+                            <input
+                                id="segundoContacto"
+                                type="tel"
+                                className="phone-input"
+                                placeholder="912345678"
+                                value={user.telefone2}
+                                onChange={(e) => handlePhoneChange(e, "telefone2")}
+                                maxLength={9}
+                            />
+                        </InputGroup>
+                    </div>
+                </Card.Body>
+            </Card>
 
             <Row>
                 <Col>
@@ -241,27 +254,24 @@ export default function Profile() {
                             />
                         </Form.Group>
 
-                        <Form.Group
-                            className="mb-3 position-relative"
-                            controlId="animalBreed"
-                            ref={suggestionsRef}
-                        >
-                            <Form.Group className="mb-3" controlId="animalType">
-                                <Form.Label>Tipo</Form.Label>
-                                <Form.Select
-                                    value={newAnimal.type}
-                                    onChange={(e) =>
-                                        setNewAnimal({
-                                            ...newAnimal,
-                                            type: e.target.value,
-                                            breed: "",
-                                        })
-                                    }
-                                >
-                                    <option>Cão</option>
-                                    <option>Gato</option>
-                                </Form.Select>
-                            </Form.Group>
+                        <Form.Group className="mb-3" controlId="animalType">
+                            <Form.Label>Tipo</Form.Label>
+                            <Form.Select
+                                value={newAnimal.type}
+                                onChange={(e) =>
+                                    setNewAnimal({
+                                        ...newAnimal,
+                                        type: e.target.value,
+                                        breed: "",
+                                    })
+                                }
+                            >
+                                <option>Cão</option>
+                                <option>Gato</option>
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3 position-relative" controlId="animalBreed" ref={suggestionsRef}>
                             <Form.Label>Raça</Form.Label>
                             <Form.Control
                                 type="text"
@@ -304,12 +314,11 @@ export default function Profile() {
                                 value={newAnimal.age}
                                 onChange={(e) => {
                                     const val = e.target.value;
-                                    if (val === "" || (Number(val) >= 0 && Number.isInteger(Number(val)))) {
+                                    if (/^\d*$/.test(val)) {
                                         setNewAnimal({ ...newAnimal, age: val });
                                     }
                                 }}
                             />
-
                         </Form.Group>
 
                         <Form.Group className="mb-4" controlId="animalPhoto">

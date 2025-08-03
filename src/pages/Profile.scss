@@ -3,11 +3,14 @@
   $cor-accento: #C5A880;
   $cor-neutro-escuro: #2E2E2E;
   $cor-neutro-claro: #E0E0E0;
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  
 
   .profile-page {
     background-color: $cor-secundaria;
     color: $cor-neutro-escuro;
     padding-bottom: 4rem;
+    font-family: 'Rubik', sans-serif;
 
     h1,
     h2,
@@ -15,41 +18,74 @@
       color: $cor-primaria;
     }
 
-    .info-pessoal {
+    .card {
+      background-color: $cor-neutro-claro;
+      border-radius: 12px;
       padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      color: $cor-neutro-escuro;
 
-      .campo-info {
-        margin-bottom: 1.5rem;
+      * {
+        color: inherit;
+      }
 
-        label {
-          display: block;
-          font-style: bold;
-          font-size: 1.7rem;
-          color: $cor-primaria;
-          margin-bottom: 0.3rem;
-        }
+      .card-body {
+        padding: 1.2rem;
 
-        .texto {
-          font-size: 1.6rem;
-          padding: 0.6rem 1rem;
-          border-radius: 8px;
-          color: $cor-neutro-escuro;
-          strong {
+        .campo-info {
+          margin-bottom: 2rem;
+
+          label {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
             color: $cor-primaria;
           }
-        }
 
-        .input-group {
-          .prefix {
-            background-color: $cor-accento;
-            color: white;
-            font-weight: bold;
+          p.texto {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            border-radius: 8px;
+            background-color: $cor-neutro-claro;
+            color: $cor-neutro-escuro;
+            margin: 0;
+
+            strong {
+              font-size: 1.6rem;
+              color: $cor-primaria;
+            }
           }
 
-          .form-control {
-            &:focus {
-              border-color: $cor-accento;
-              box-shadow: 0 0 0 0.2rem rgba($cor-accento, 0.25);
+          .input-group {
+            display: flex;
+            align-items: center;
+
+            .prefix {
+              background-color: $cor-accento;
+              color: white;
+              font-weight: bold;
+              padding: 0.5rem 1rem;
+              border-radius: 6px 0 0 6px;
+              border: 2px solid $cor-accento;
+            }
+
+            .phone-input {
+              flex: 1;
+              max-width: 125px;
+              border: 2px solid $cor-accento;
+              background-color: $cor-neutro-claro;
+              color: $cor-neutro-escuro;
+              font-weight: 500;
+              padding: 0.5rem 1rem;
+              border-radius: 6px;
+              outline: none;
+              transition: 0.2s ease;
+
+              &:focus {
+                border-color: $cor-primaria;
+                box-shadow: 0 0 0 0.2rem rgba(112, 28, 28, 0.25);
+              }
             }
           }
         }
@@ -198,3 +234,50 @@
       }
     }
   }
+
+  // Modal personalizado
+.modal-header-custom {
+  background-color: $cor-primaria;
+  color: white;
+}
+
+.modal-body-custom {
+  background-color: $cor-neutro-claro;
+  padding-right: 0;
+  padding-left: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+
+  .scroll-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 10px;
+
+    // Scrollbar estilizada
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $cor-accento;
+      border-radius: 3px;
+    }
+  }
+
+  .list-group {
+    margin: 0;
+  }
+
+  .list-group-item {
+    background-color: white;
+    color: $cor-primaria;
+    border-left: 4px solid $cor-accento;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $cor-accento;
+      color: white;
+    }
+  }
+}

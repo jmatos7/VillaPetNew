@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthModalContext } from '../contexts/AuthModalContext';
+import { AuthContext } from '../contexts/AuthContext';
 import { Navbar, Container, Offcanvas, Nav, Button, Image } from 'react-bootstrap';
 import { FiMenu, FiHome, FiCalendar, FiPhone, FiUser, FiLogIn } from 'react-icons/fi';
 import './Navbar.scss';
 
 export default function ModernNavbar() {
   const [show, setShow] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
   const { setShowModal } = useContext(AuthModalContext);
+
+  // Verificar estado de login
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+
 
   // Detetar scroll para aplicar fundo translúcido
   useEffect(() => {
@@ -41,7 +45,7 @@ export default function ModernNavbar() {
 
           <Nav>
             {isLoggedIn ? (
-              <Nav.Link href="/perfil" className="d-flex align-items-center" onClick={toggleLogin}>
+              <Nav.Link href="/profile" className="d-flex align-items-center" onClick={handleClose}>
                 <FiUser size={22} className="me-1" />
                 <span className="d-none d-md-inline">Meu Perfil</span>
               </Nav.Link>

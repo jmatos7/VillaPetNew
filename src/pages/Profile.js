@@ -18,10 +18,10 @@ const defaultAnimalImg =
 
 export default function Profile() {
     const [user, setUser] = useState({
-        nome: "João Matos",
-        email: "joao@email.com",
-        telefone: "912345678",
-        telefone2: "",
+        name: "",
+        email: "",
+        phone: "",
+        phone2: "",
     });
 
     const [animals, setAnimals] = useState([]);
@@ -29,9 +29,53 @@ export default function Profile() {
         name: "",
         breed: "",
         age: "",
-        type: "Cão",
+        type: "",
         photo: "",
     });
+
+    const [editPhone, setEditPhone] = useState(false);
+
+    const toggleEditPhone = () => {
+        const wasEditing = editPhone; // guarda o valor atual antes de mudar
+        setEditPhone((prev) => !prev);
+
+        if (wasEditing) {
+            // Só salva quando estás a sair do modo edição
+            try {
+                fetch("http://localhost:3001/api/user/me/update-phone", {
+                    credentials: "include",
+                    method: "PUT", // Deveria ser PUT porque o backend usa router.put
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        phone: user.phone,
+                        phone2: user.phone2,
+                    }),
+                });
+            } catch (error) {
+                console.error("Erro ao atualizar telefone:", error);
+            }
+        }
+    };
+
+
+    useEffect(() => {
+        async function fetchUserData() {
+            try {
+                const res = await fetch(`http://localhost:3001/api/user/me`, {
+                    credentials: "include",
+                });
+                if (!res.ok) throw new Error("Erro ao carregar perfil");
+                const data = await res.json();
+                setAnimals(data.animals || []);
+                setUser(data);
+            } catch (error) {
+                console.error("Erro ao carregar dados do usuário:", error);
+            }
+        }
+        fetchUserData();
+    }, []);
 
     const [photoPreview, setPhotoPreview] = useState(null);
     const [dogBreeds, setDogBreeds] = useState([]);
@@ -157,7 +201,7 @@ export default function Profile() {
             <Card className="mb-4">
                 <Card.Body>
                     <div className="campo-info">
-                        <p className="texto"><strong>Nome:</strong> {user.nome}</p>
+                        <p className="texto"><strong>Nome:</strong> {user.name}</p>
                     </div>
 
                     <div className="campo-info">
@@ -166,32 +210,50 @@ export default function Profile() {
 
                     <div className="campo-info">
                         <label htmlFor="telefone"><strong>Número de Telemóvel:</strong></label>
-                        <InputGroup>
-                            <input
-                                id="telefone"
-                                type="tel"
-                                className="phone-input "
-                                placeholder="912345678"
-                                value={user.telefone}
-                                onChange={(e) => handlePhoneChange(e, "telefone")}
-                                maxLength={9}
-                            />
-                        </InputGroup>
+                        {!editPhone ? (
+                            <p className="texto">{user.phone || "Não definido"}</p>
+                        ) : (
+                            <InputGroup>
+                                <input
+                                    id="telefone"
+                                    type="tel"
+                                    className="phone-input"
+                                    placeholder="912345678"
+                                    value={user.phone || ""}
+                                    onChange={(e) => handlePhoneChange(e, "phone")}
+                                    maxLength={9}
+                                />
+                            </InputGroup>
+                        )}
                     </div>
 
                     <div className="campo-info">
                         <label htmlFor="segundoContacto"><strong>Segundo Contacto (opcional):</strong></label>
-                        <InputGroup>
-                            <input
-                                id="segundoContacto"
-                                type="tel"
-                                className="phone-input"
-                                placeholder="912345678"
-                                value={user.telefone2}
-                                onChange={(e) => handlePhoneChange(e, "telefone2")}
-                                maxLength={9}
-                            />
-                        </InputGroup>
+                        {!editPhone ? (
+                            <p className="texto">{user.phone2 || "Não definido"}</p>
+                        ) : (
+                            <InputGroup>
+                                <input
+                                    id="telefone"
+                                    type="tel"
+                                    className="phone-input"
+                                    placeholder="912345678"
+                                    value={user.phone2 || ""}
+                                    onChange={(e) => handlePhoneChange(e, "phone2")}
+                                    maxLength={9}
+                                />
+                            </InputGroup>
+                        )}
+
+                        <Button variant="secundary" onClick={toggleEditPhone} className="mt-3">
+                            {editPhone ? "Guardar" : "Editar Número"}
+                        </Button>
+                    </div>
+
+                    <div className="campo-info">
+                        <Button>
+                            Logout
+                        </Button>
                     </div>
                 </Card.Body>
             </Card>

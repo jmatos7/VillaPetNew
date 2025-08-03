@@ -10,25 +10,26 @@ import LoginModal from './components/LoginModal';
 import Profile from './pages/Profile';
 import Admin from './pages/PainelDeFuncionario';
 import { AuthModalProvider } from './contexts/AuthModalContext'; 
-
-
+import { AuthProvider } from './contexts/AuthContext';  // <-- importe o AuthProvider
 
 function App() {
   return (
-    <AuthModalProvider>
-      <Router>
-        <VillaPetNavbar />
-        <LoginModal /> {/* Pode ficar aqui, visível em todas as páginas */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/marcacoes" element={<Marcacoes />} />
-          <Route path="/profile" element={<Profile/>}/>
-          <Route path="/admin" element={<Admin/>}/>
-        </Routes>
-        <Footer />
-      </Router>
-    </AuthModalProvider>
+    <AuthProvider> 
+      <AuthModalProvider>
+        <Router>
+          <VillaPetNavbar />
+          <LoginModal />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/marcacoes" element={<Marcacoes />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+          <Footer />
+        </Router>
+      </AuthModalProvider>
+    </AuthProvider>
   );
 }
 

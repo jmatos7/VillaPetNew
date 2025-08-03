@@ -4,7 +4,7 @@ $cor-accento: #C5A880;
 $cor-neutro-escuro: #2E2E2E;
 $cor-neutro-claro: #E0E0E0;
 
-.modal-header-custom {
+.modal-header-custom-login {
     background-color: $cor-primaria;
     color: $cor-neutro-claro;
 
@@ -35,7 +35,7 @@ $cor-neutro-claro: #E0E0E0;
     border-radius: 0.5rem;
 }
 
-.modal-body-custom {
+.modal-body-custom-login {
     background-color: $cor-secundaria;
     height: 100%;
     border-bottom-left-radius: 0.5rem;

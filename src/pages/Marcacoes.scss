@@ -5,14 +5,14 @@ $cor-accento: #C5A880;
 $cor-neutro-escuro: #2E2E2E;
 $cor-neutro-claro: #E0E0E0;
 
-body{
+body {
   background-color: $cor-secundaria;
 }
 
 .marcacoes-container {
   border-radius: 12px;
   padding: 2rem;
-
+  
   .titulo {
     color: $cor-primaria;
     font-weight: bold;
@@ -29,11 +29,13 @@ body{
       padding: 1rem;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+
     .fc-daygrid-day:not(.fc-day-disabled) {
-  cursor: pointer;
-}
-    a{
-      color:$cor-primaria;
+      cursor: pointer;
+    }
+
+    a {
+      color: $cor-primaria;
       text-decoration: none;
     }
   }

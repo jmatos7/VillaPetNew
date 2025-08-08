@@ -10,7 +10,7 @@ import LoginModal from './components/LoginModal';
 import Profile from './pages/Profile';
 import Admin from './pages/PainelDeFuncionario';
 import { AuthModalProvider } from './contexts/AuthModalContext'; 
-import { AuthProvider } from './contexts/AuthContext';  // <-- importe o AuthProvider
+import { AuthProvider } from './contexts/AuthContext';  
 
 function App() {
   return (

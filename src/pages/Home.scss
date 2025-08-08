@@ -4,6 +4,10 @@ $cor-accento: #C5A880;
 $cor-neutro-escuro: #2E2E2E;
 $cor-neutro-claro: #E0E0E0;
 
+html {
+  scroll-behavior: smooth;
+}
+
 .hero {
   position: relative;
   height: 100vh;

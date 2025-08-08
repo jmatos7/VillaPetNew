@@ -32,6 +32,13 @@ export default function Marcacoes() {
   hoje.setHours(0, 0, 0, 0);
 
   const handleDateClick = (arg) => {
+
+    if (!isLoggedIn) {
+    alert('Precisas de estar logado para fazer marcações.');
+    setShowModal(true); // Abre o modal de login
+    return;
+  }
+
     const data = new Date(arg.dateStr);
     data.setHours(0, 0, 0, 0);
 
@@ -72,11 +79,23 @@ export default function Marcacoes() {
           Hora: ${horarioSelecionado}
           Serviço: ${servicoSelecionado}
           Animal: ${animal}`);
+    const formData = new FormData();
+    formData.append('data', dataSelecionada);
+    formData.append('hora', horarioSelecionado);
+    formData.append('servico', servicoSelecionado);
+    formData.append('animal', animal);
+    
+    
+    setDataSelecionada(null);
+    setHorarioSelecionado(null);
+    setServicoSelecionado(null);
+    setShowHorarioModal(false);
+    setShowServicoModal(false);
     setShowAnimalModal(false);
   };
 
   return (
-    <Container className="marcacoes-container py-4">
+    <Container className="marcacoes-container">
       <h1 className="titulo mb-3">Bem-vindo às marcações</h1>
       <p className="descricao mb-4">Gerencia as marcações do teu melhor amigo.</p>
 

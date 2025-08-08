@@ -13,10 +13,8 @@ import {
 import { useDebounce } from "use-debounce";
 import "./Profile.scss";
 
-const defaultAnimalImg =
-    "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=300&q=80";
-
 export default function Profile() {
+    const fileInputRef = useRef(null);
     const [user, setUser] = useState({
         name: "",
         email: "",
@@ -29,7 +27,7 @@ export default function Profile() {
         name: "",
         breed: "",
         age: "",
-        type: "",
+        species: "",
         photo: "",
     });
 
@@ -69,6 +67,7 @@ export default function Profile() {
                 if (!res.ok) throw new Error("Erro ao carregar perfil");
                 const data = await res.json();
                 setAnimals(data.animals || []);
+                console.log(data.animals);
                 setUser(data);
             } catch (error) {
                 console.error("Erro ao carregar dados do usuário:", error);
@@ -106,35 +105,33 @@ export default function Profile() {
     }, []);
 
     const breedList = useMemo(() => {
-        return newAnimal.type === "Cão" ? dogBreeds : catBreeds;
-    }, [newAnimal.type, dogBreeds, catBreeds]);
+        return newAnimal.species === "Cão" ? dogBreeds : catBreeds;
+    }, [newAnimal.species, dogBreeds, catBreeds]);
+
+    const breedSuggestions = useMemo(() => {
+        const query = debouncedBreed.trim().toLowerCase();
+        if (query.length < 3) return [];
+
+        const domain = newAnimal.species === "Cão" ? "thedogapi" : "thecatapi";
+        return breedList
+            .filter((breed) => breed.name.toLowerCase().includes(query))
+            .slice(0, 7)
+            .map((breed) => {
+                let imgUrl = "https://via.placeholder.com/50";
+                if (breed.image?.url) {
+                    imgUrl = breed.image.url;
+                } else if (breed.reference_image_id) {
+                    imgUrl = `https://cdn2.${domain}.com/images/${breed.reference_image_id}.jpg?width=60`;
+                }
+                return { id: breed.id, name: breed.name, imgUrl };
+            });
+    }, [debouncedBreed, breedList, newAnimal.species]);
 
     useEffect(() => {
-        const query = debouncedBreed.trim().toLowerCase();
-        if (query.length < 3) {
-            setSuggestions([]);
-            setShowSuggestions(false);
-            return;
-        }
+        setSuggestions(breedSuggestions);
+        setShowSuggestions(breedSuggestions.length > 0);
+    }, [breedSuggestions]);
 
-        const domain = newAnimal.type === "Cão" ? "thedogapi" : "thecatapi";
-        const filtered = breedList.filter((breed) =>
-            breed.name.toLowerCase().includes(query)
-        );
-
-        const suggestions = filtered.slice(0, 7).map((breed) => {
-            let imgUrl = "https://via.placeholder.com/50";
-            if (breed.image?.url) {
-                imgUrl = breed.image.url;
-            } else if (breed.reference_image_id) {
-                imgUrl = `https://cdn2.${domain}.com/images/${breed.reference_image_id}.jpg?width=60`;
-            }
-            return { id: breed.id, name: breed.name, imgUrl };
-        });
-
-        setSuggestions(suggestions);
-        setShowSuggestions(suggestions.length > 0);
-    }, [debouncedBreed, breedList, newAnimal.type]);
 
     const handleSuggestionClick = (name) => {
         setNewAnimal((prev) => ({ ...prev, breed: name }));
@@ -165,33 +162,86 @@ export default function Profile() {
         const file = e.target.files[0];
         if (!file) {
             setPhotoPreview(null);
-            setNewAnimal({ ...newAnimal, photo: "" });
+            setNewAnimal((a) => ({ ...a, photoFile: null }));
             return;
         }
         const reader = new FileReader();
         reader.onloadend = () => {
             setPhotoPreview(reader.result);
-            setNewAnimal((a) => ({ ...a, photo: reader.result }));
+            setNewAnimal((a) => ({ ...a, photoFile: file }));
         };
         reader.readAsDataURL(file);
     };
 
-    const addAnimal = (e) => {
+
+    const addAnimal = async (e) => {
         e.preventDefault();
+
         if (!newAnimal.name.trim()) return alert("O nome é obrigatório!");
         if (newAnimal.age && Number(newAnimal.age) < 0)
             return alert("A idade não pode ser negativa!");
 
-        setAnimals((prev) => [...prev, { ...newAnimal, id: Date.now() }]);
-        setNewAnimal({ name: "", breed: "", age: "", type: "Cão", photo: "" });
-        setPhotoPreview(null);
-        setSuggestions([]);
-        setShowSuggestions(false);
-        document.getElementById("animalPhotoInput").value = "";
+        const formData = new FormData();
+        formData.append("name", newAnimal.name);
+        formData.append("breed", newAnimal.breed);
+        formData.append("age", newAnimal.age ? Number(newAnimal.age) : "");
+        formData.append("species", newAnimal.species);
+        if (newAnimal.photoFile) {
+            formData.append("image", newAnimal.photoFile); // nome do campo que o backend espera
+        }
+
+        try {
+            const response = await fetch("http://localhost:3001/api/animal/me/createanimal", {
+                method: "POST",
+                credentials: "include", 
+                body: formData, 
+            });
+
+            if (!response.ok) throw new Error("Erro ao adicionar animal");
+            const data = await response.json();
+
+            setAnimals((prev) => [...prev, data.animal]);
+            setNewAnimal({
+                name: "",
+                breed: "",
+                age: "",
+                type: "Cão",
+                photoFile: null,
+            });
+            setPhotoPreview(null);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
+        } catch (error) {
+            console.error("Erro ao adicionar animal:", error);
+            alert("Erro ao adicionar animal. Tente novamente.");
+        }
     };
 
+
     const removeAnimal = (id) => {
-        setAnimals((prev) => prev.filter((a) => a.id !== id));
+        if (!window.confirm("Tens a certeza que queres remover este animal?")) return;
+
+        fetch(`http://localhost:3001/api/animal/me/deleteanimal/${id}`, {
+            credentials: "include",
+            method: "DELETE",
+        })
+            .then((res) => {
+                if (!res.ok) throw new Error("Erro ao remover animal");
+                setAnimals((prev) => prev.filter((a) => a.id !== id));
+            })
+            .catch((error) => {
+                console.error("Erro ao remover animal:", error);
+                alert("Erro ao remover animal. Tente novamente.");
+            });
+        setNewAnimal({
+            name: "",
+            breed: "",
+            age: "",
+            species: "",
+            photo: "",
+        });
+        setPhotoPreview(null);
     };
 
     return (
@@ -265,13 +315,13 @@ export default function Profile() {
                         <p className="text-muted">Ainda não adicionaste nenhum animal.</p>
                     ) : (
                         <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-                            {animals.map(({ id, name, breed, age, type, photo }) => (
+                            {animals.map(({ id, name, breed, age, species, imageUrl }) => (
                                 <Col key={id}>
                                     <Card className="animal-card shadow-sm h-100">
                                         <div className="image-wrapper">
                                             <Card.Img
                                                 variant="top"
-                                                src={photo || defaultAnimalImg}
+                                                src={imageUrl || null}
                                                 alt={name}
                                                 loading="lazy"
                                             />
@@ -279,7 +329,7 @@ export default function Profile() {
                                         <Card.Body className="d-flex flex-column">
                                             <Card.Title>{name}</Card.Title>
                                             <Card.Text className="mb-2">
-                                                <b>Tipo:</b> {type}<br />
+                                                <b>Tipo:</b> {species}<br />
                                                 <b>Raça:</b> {breed || "Não especificada"}<br />
                                                 <b>Idade:</b> {age || "Não especificada"} anos
                                             </Card.Text>
@@ -289,6 +339,12 @@ export default function Profile() {
                                                 onClick={() => removeAnimal(id)}
                                             >
                                                 Remover
+                                            </Button>
+                                            <Button
+                                                variant="outline-danger"
+                                                className="mt-5px "
+                                            >
+                                                Editar
                                             </Button>
                                         </Card.Body>
                                     </Card>
@@ -319,15 +375,16 @@ export default function Profile() {
                         <Form.Group className="mb-3" controlId="animalType">
                             <Form.Label>Tipo</Form.Label>
                             <Form.Select
-                                value={newAnimal.type}
+                                value={newAnimal.species}
                                 onChange={(e) =>
                                     setNewAnimal({
                                         ...newAnimal,
-                                        type: e.target.value,
+                                        species: e.target.value,
                                         breed: "",
                                     })
                                 }
                             >
+                                <option value="">-- Selecione o tipo -- </option>
                                 <option>Cão</option>
                                 <option>Gato</option>
                             </Form.Select>
@@ -388,6 +445,7 @@ export default function Profile() {
                             <Form.Control
                                 type="file"
                                 accept="image/*"
+                                ref={fileInputRef}
                                 onChange={handlePhotoChange}
                             />
                             {photoPreview && (

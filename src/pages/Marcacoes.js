@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Modal, Button, ListGroup, Container } from 'react-bootstrap';
+import { AuthModalContext } from '../contexts/AuthModalContext';
+import { AuthContext } from '../contexts/AuthContext';
 import './Marcacoes.scss';
 
 export default function Marcacoes() {
@@ -14,8 +16,14 @@ export default function Marcacoes() {
   const [showServicoModal, setShowServicoModal] = useState(false);
   const [servicoSelecionado, setServicoSelecionado] = useState(null);
 
+  const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
+    const { setShowModal } = useContext(AuthModalContext);
+  
+    // Verificar estado de login
+    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
-  const servicosDisponiveis = ['Banho & Tosquia', 'Hospedagem', 'Adestramento'];
+
+  const servicosDisponiveis = ['Banho', 'Tosquia', 'Hospedagem', 'Adestramento'];
 
   // Simulação de animais
   const animaisDoUtilizador = ['Bobby', 'Luna', 'Thor', 'Nina'];

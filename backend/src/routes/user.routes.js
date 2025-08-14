@@ -42,10 +42,10 @@ router.get('/me', verifyToken, async (req, res) => {
 });
 
 router.get('/me/animals', verifyToken, async (req, res) => {
-  const userId = req.user.id; // vem do token decodificado
+  const ownerId = req.user.id; // vem do token decodificado
   try {
     const animals = await prisma.animal.findMany({
-      where: { userId },
+      where: { ownerId },
       select: {
         id: true,
         name: true,
@@ -55,7 +55,7 @@ router.get('/me/animals', verifyToken, async (req, res) => {
       }
     });
 
-    res.json(animals);
+    res.json( animals );
   } catch (err) {
     console.error('Erro ao obter animais do utilizador:', err);
     res.status(500).json({ message: 'Erro no servidor' });

@@ -1,4 +1,4 @@
-import React, { useEffect,useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -28,36 +28,50 @@ export default function Marcacoes() {
   const [animais, setAnimais] = useState([]);
 
   const animaisDoUtilizador = async () => {
-  try {
-    const res = await fetch('/api/user/me/animals', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    try {
+      const res = await fetch('http://localhost:3001/api/user/me/animals', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-    if (!res.ok) {
-      throw new Error('Erro ao buscar animais');
+      if (!res.ok) {
+        throw new Error('Erro ao buscar animais');
+      }
+
+      const data = await res.json();
+      console.log('Animais do utilizador:', data);
+      return data || [];
+    } catch (error) {
+      console.error('Erro ao buscar animais:', error);
+      return [];
     }
-
-    const data = await res.json();
-    return data.animais || [];
-  } catch (error) {
-    console.error('Erro ao buscar animais:', error);
-    return [];
-  }
-};
-
-useEffect(() => {
-  const fetchAnimais = async () => {
-    const dados = await animaisDoUtilizador();
-    setAnimais(dados);
   };
 
-  if (showAnimalModal) {
-    fetchAnimais();
-  }
-}, [showAnimalModal]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAnimais = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const dados = await animaisDoUtilizador();
+        setAnimais(dados);
+      } catch (err) {
+        setError('Erro ao carregar animais.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (showAnimalModal) {
+      fetchAnimais();
+    }
+  }, [showAnimalModal]);
+
 
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
@@ -109,12 +123,15 @@ useEffect(() => {
           Data: ${dataSelecionada}
           Hora: ${horarioSelecionado}
           Serviço: ${servicoSelecionado}
-          Animal: ${animal}`);
+          Animal: ${animal.name}`);
     const formData = new FormData();
     formData.append('data', dataSelecionada);
     formData.append('hora', horarioSelecionado);
     formData.append('servico', servicoSelecionado);
-    formData.append('animal', animal);
+    formData.append('animal', animal.id);
+
+    console.log(Object.fromEntries(formData.entries()));
+
 
 
     setDataSelecionada(null);
@@ -198,35 +215,34 @@ useEffect(() => {
 
 
       {/* Modal de Animais */}
-      {/* Modal de Animais */}
-<Modal show={showAnimalModal} onHide={() => setShowAnimalModal(false)} centered>
-  <Modal.Header closeButton className="modal-header-custom">
-    <Modal.Title>Seleciona o animal</Modal.Title>
-  </Modal.Header>
-  <Modal.Body className="modal-body-custom">
-    <ListGroup>
-      {animais.length > 0 ? (
-        animais.map((animal, idx) => (
-          <ListGroup.Item
-            action
-            key={idx}
-            onClick={() => selecionarAnimal(animal.nome || animal)}
-            className="item-horario"
-          >
-            {animal.nome || animal}
-          </ListGroup.Item>
-        ))
-      ) : (
-        <p>Nenhum animal encontrado.</p>
-      )}
-    </ListGroup>
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => setShowAnimalModal(false)}>
-      Cancelar
-    </Button>
-  </Modal.Footer>
-</Modal>
+      <Modal show={showAnimalModal} onHide={() => setShowAnimalModal(false)} centered>
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title>Seleciona o animal</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="modal-body-custom">
+          <ListGroup>
+            {animais.length > 0 ? (
+              animais.map((animal, idx) => (
+                <ListGroup.Item
+                  action
+                  key={idx}
+                  onClick={() => selecionarAnimal(animal)}
+                  className="item-horario"
+                >
+                  {animal.name}
+                </ListGroup.Item>
+              ))
+            ) : (
+              <p>Nenhum animal encontrado.</p>
+            )}
+          </ListGroup>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAnimalModal(false)}>
+            Cancelar
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
     </Container>
   );

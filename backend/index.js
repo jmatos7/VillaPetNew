@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import authRoutes from './src/routes/auth.routes.js';
 import authUser from './src/routes/user.routes.js';
 import animalRoutes from './src/routes/animal.routes.js';
+import bookingRoutes from './src/routes/booking.routes.js';
 import 'dotenv/config';
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', authUser);
 app.use('/api/animal', animalRoutes);
+app.use('/api/booking', bookingRoutes);
 app.use('/uploads', express.static('uploads'));
 
 app.listen(3001, () => console.log('Backend a correr na porta 3001'));

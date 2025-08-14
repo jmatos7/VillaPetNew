@@ -41,6 +41,28 @@ router.get('/me', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/me/animals', verifyToken, async (req, res) => {
+  const userId = req.user.id; // vem do token decodificado
+  try {
+    const animals = await prisma.animal.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        name: true,
+        breed: true,
+        age: true,
+        species: true
+      }
+    });
+
+    res.json(animals);
+  } catch (err) {
+    console.error('Erro ao obter animais do utilizador:', err);
+    res.status(500).json({ message: 'Erro no servidor' });
+  }
+
+});
+
 router.put('/me/update-phone', verifyToken, async (req, res) => {
   const userId = req.user.id; // vem do token decodificado
     const { phone, phone2 } = req.body;

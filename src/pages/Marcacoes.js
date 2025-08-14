@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useEffect,useState, useContext } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -17,16 +17,47 @@ export default function Marcacoes() {
   const [servicoSelecionado, setServicoSelecionado] = useState(null);
 
   const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
-    const { setShowModal } = useContext(AuthModalContext);
-  
-    // Verificar estado de login
-    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { setShowModal } = useContext(AuthModalContext);
+
+  // Verificar estado de login
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
 
   const servicosDisponiveis = ['Banho', 'Tosquia', 'Hospedagem', 'Adestramento'];
 
-  // Simulação de animais
-  const animaisDoUtilizador = ['Bobby', 'Luna', 'Thor', 'Nina'];
+  const [animais, setAnimais] = useState([]);
+
+  const animaisDoUtilizador = async () => {
+  try {
+    const res = await fetch('/api/user/me/animals', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error('Erro ao buscar animais');
+    }
+
+    const data = await res.json();
+    return data.animais || [];
+  } catch (error) {
+    console.error('Erro ao buscar animais:', error);
+    return [];
+  }
+};
+
+useEffect(() => {
+  const fetchAnimais = async () => {
+    const dados = await animaisDoUtilizador();
+    setAnimais(dados);
+  };
+
+  if (showAnimalModal) {
+    fetchAnimais();
+  }
+}, [showAnimalModal]);
 
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
@@ -34,10 +65,10 @@ export default function Marcacoes() {
   const handleDateClick = (arg) => {
 
     if (!isLoggedIn) {
-    alert('Precisas de estar logado para fazer marcações.');
-    setShowModal(true); // Abre o modal de login
-    return;
-  }
+      alert('Precisas de estar logado para fazer marcações.');
+      setShowModal(true); // Abre o modal de login
+      return;
+    }
 
     const data = new Date(arg.dateStr);
     data.setHours(0, 0, 0, 0);
@@ -84,8 +115,8 @@ export default function Marcacoes() {
     formData.append('hora', horarioSelecionado);
     formData.append('servico', servicoSelecionado);
     formData.append('animal', animal);
-    
-    
+
+
     setDataSelecionada(null);
     setHorarioSelecionado(null);
     setServicoSelecionado(null);
@@ -167,30 +198,36 @@ export default function Marcacoes() {
 
 
       {/* Modal de Animais */}
-      <Modal show={showAnimalModal} onHide={() => setShowAnimalModal(false)} centered>
-        <Modal.Header closeButton className="modal-header-custom">
-          <Modal.Title>Seleciona o animal</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="modal-body-custom">
-          <ListGroup>
-            {animaisDoUtilizador.map((animal, idx) => (
-              <ListGroup.Item
-                action
-                key={idx}
-                onClick={() => selecionarAnimal(animal)}
-                className="item-horario"
-              >
-                {animal}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAnimalModal(false)}>
-            Cancelar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* Modal de Animais */}
+<Modal show={showAnimalModal} onHide={() => setShowAnimalModal(false)} centered>
+  <Modal.Header closeButton className="modal-header-custom">
+    <Modal.Title>Seleciona o animal</Modal.Title>
+  </Modal.Header>
+  <Modal.Body className="modal-body-custom">
+    <ListGroup>
+      {animais.length > 0 ? (
+        animais.map((animal, idx) => (
+          <ListGroup.Item
+            action
+            key={idx}
+            onClick={() => selecionarAnimal(animal.nome || animal)}
+            className="item-horario"
+          >
+            {animal.nome || animal}
+          </ListGroup.Item>
+        ))
+      ) : (
+        <p>Nenhum animal encontrado.</p>
+      )}
+    </ListGroup>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowAnimalModal(false)}>
+      Cancelar
+    </Button>
+  </Modal.Footer>
+</Modal>
+
     </Container>
   );
 }

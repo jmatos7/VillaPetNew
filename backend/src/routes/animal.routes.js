@@ -7,7 +7,7 @@ import cloudinary from '../utils/cloudinary.js';
 const router = express.Router();
 const prisma = new PrismaClient();
 
-const storage = multer.memoryStorage(); 
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 

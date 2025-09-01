@@ -19,6 +19,8 @@ export default function Marcacoes() {
   const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
   const { setShowModal } = useContext(AuthModalContext);
 
+  const [bookings, setBookings] = useState([]);
+
   // Verificar estado de login
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
@@ -95,8 +97,8 @@ export default function Marcacoes() {
     const horarios = [];
     for (let hora = 8; hora < 20; hora++) {
       horarios.push(
-        `${hora.toString().padStart(2, '0')}:00 `,
-        `${hora.toString().padStart(2, '0')}:30 `
+        `${hora.toString().padStart(2, '0')}:00`,
+        `${hora.toString().padStart(2, '0')}:30`
       );
     }
 
@@ -118,21 +120,23 @@ export default function Marcacoes() {
   };
 
 
+
   const selecionarAnimal = (animal) => {
+    const formData = new FormData();
     alert(`Marcaçāo confirmada:
           Data: ${dataSelecionada}
           Hora: ${horarioSelecionado}
           Serviço: ${servicoSelecionado}
-          Animal: ${animal.name}`);
-    const formData = new FormData();
+          Animal: ${animal.name}`
+    );
+
     formData.append('data', dataSelecionada);
     formData.append('hora', horarioSelecionado);
-    formData.append('servico', servicoSelecionado);
-    formData.append('animal', animal.id);
+    formData.append('service', servicoSelecionado);
+    formData.append('animalId', animal.id);
 
+    createBooking(formData);
     console.log(Object.fromEntries(formData.entries()));
-
-
 
     setDataSelecionada(null);
     setHorarioSelecionado(null);
@@ -142,6 +146,74 @@ export default function Marcacoes() {
     setShowAnimalModal(false);
   };
 
+
+  async function createBooking(formData) {
+    try {
+      const response = await fetch('http://localhost:3001/api/booking/me/createbooking', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(Object.fromEntries(formData.entries())),
+
+      });
+      if (!response.ok) {
+        throw new Error('Erro ao criar marcação');
+      }
+
+      const data = await response.json();
+      setBookings(prev => [
+        ...prev,
+        {
+          title: `${servicoSelecionado} - ${data.animal?.name || "Animal"}`,
+          start: `${dataSelecionada}T${horarioSelecionado}`,
+        },
+      ]);
+      console.log('Marcação criada com sucesso:', data);
+    } catch (error) {
+      console.error('Erro ao criar marcação:', error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const res = await fetch('http://localhost:3001/api/booking/me/bookings', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error('Erro ao buscar marcações');
+        const data = await res.json();
+
+        const eventos = data.map((booking) => {
+          const start = booking.startDate.endsWith('Z') ? booking.startDate.slice(0, -1) : booking.startDate;
+          return {
+            id: booking.id,
+            title: `${booking.service} - ${booking.animal?.name || ''}`,
+            start: start, // remove o Z
+            allDay: false,
+            extendedProps: {
+              service: booking.service,
+              animalName: booking.animal?.name || '',
+            },
+          };
+        });
+
+
+        setBookings(eventos);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchBookings();
+    }
+  }, [isLoggedIn]);
+
+
+
   return (
     <Container className="marcacoes-container">
       <h1 className="titulo mb-3">Bem-vindo às marcações</h1>
@@ -149,13 +221,16 @@ export default function Marcacoes() {
 
       <div className="calendar-wrapper mb-4">
         <FullCalendar
+          timeZone="UTC"
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           locale="pt"
           dateClick={handleDateClick}
           validRange={{ start: hoje }}
           height="auto"
+          events={bookings}
         />
+
       </div>
 
       {/* Modal de Horários */}
